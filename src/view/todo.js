@@ -25,7 +25,9 @@ function formatDateForPanel(prefix, date) {
     date.getMonth() + 1
   }.${date.getFullYear()}`;
 
-  const timePart = `${date.getHours()}:${date.getMinutes()}`;
+  let formatMinutes = date.getMinutes();
+  formatMinutes = formatMinutes < 10 ? "0" + formatMinutes : formatMinutes;
+  const timePart = `${date.getHours()}:${formatMinutes}`;
 
   return `${prefix}: ${datePart} - ${timePart}`;
 }
