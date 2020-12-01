@@ -68,6 +68,11 @@
   color: aquamarine;
 }
 
+.back-to-list-button {
+  width: 125px;
+  color: orangered;
+}
+
 .postpone-button {
   width: 125px;
   color: orange;
