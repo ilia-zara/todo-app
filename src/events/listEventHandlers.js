@@ -1,8 +1,9 @@
 import { getTodoInput } from "../helpers.js";
 
 import todoStorage from "../model/todoStorage.js";
-import renderTodoList from "../view/todoList.js";
-import renderFullTodoItem from "../view/fullTodo.js";
+import renderTodoList from "../view/todoListPage/todoList.js";
+
+import configureRouter from "../routerConfig.js";
 
 function addTodoHandler(doc) {
   console.log("Add button clicked");
@@ -22,8 +23,8 @@ function clearFormHandler(doc) {
 function updateTotalTodoCount(doc) {
   console.log("Updating Total Todo Count");
 
-  const h2 = doc.getElementById("todo-counter");
-  h2.innerHTML = `Total Todo Count: ${todoStorage.totalTodoCount()}`;
+  const h2 = doc.getElementById("total-counter-number");
+  h2.innerHTML = `${todoStorage.totalTodoCount()}`;
 }
 
 function updateTodoList(doc) {
@@ -33,10 +34,12 @@ function updateTodoList(doc) {
   renderTodoList(doc, allTodo);
 }
 
-function renderTodoScreen(doc, event) {
+function navigateToTodo(doc, event) {
   const todoId = event.detail.todoId;
   console.log(`Rendering todo screen for todo: ${todoId}`);
-  renderFullTodoItem(doc, todoStorage.getTodoById(todoId));
+
+  const router = configureRouter(doc, "/");
+  router.navigate(`todo/${todoId}`);
 }
 
 function notifyAboutTodoChange(doc) {
@@ -91,7 +94,7 @@ function todoListActionHandler(doc, event) {
   }
 }
 
-export function describeEventHandlers(doc) {
+export function getListEventHandlers(doc) {
   return [
     {
       elementId: "add-todo-button",
@@ -141,7 +144,7 @@ export function describeEventHandlers(doc) {
     {
       element: doc,
       eventName: "todo-item-shown",
-      handler: renderTodoScreen.bind(null, doc),
+      handler: navigateToTodo.bind(null, doc),
     },
   ];
 }

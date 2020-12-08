@@ -92,3 +92,12 @@
   width: 125px;
   color: blue;
 }
+
+#total-counter-text {
+  color: black;
+  padding-right: 5px;
+}
+
+#total-counter-number {
+  color: blueviolet;
+}

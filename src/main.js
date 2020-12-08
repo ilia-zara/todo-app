@@ -1,12 +1,9 @@
-import { describeEventHandlers } from "./events/listEventHandlers.js";
-import { setupEventListeners } from "./events.js";
+import configureRouter from "./routerConfig.js";
 
 export function startApplication(doc) {
   console.log("TODO Application started");
 
-  const rootDiv = doc.getElementById("root");
+  const router = configureRouter(doc, "/");
 
-  console.log(`Root div is ${rootDiv === null ? "not found" : "found"}`);
-
-  setupEventListeners(doc, describeEventHandlers(doc));
+  router.navigate("/");
 }
