@@ -3,12 +3,25 @@
 }
 
 #root {
-  width: 100%;
+  height: 100vh;
+  background: #efeeee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #app-container {
   width: 70%;
-  margin: auto;
+  padding: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  box-shadow: 6px 6px 16px 0 rgb(217 210 200),
+    -6px -6px 26px 0 rgba(255, 255, 255, 0.83);
+}
+
+.edit-form-container {
+  text-align: center;
+  color: #2196f3;
 }
 
 .editor-form {
@@ -27,6 +40,36 @@
 
 #todo-text {
   width: 100%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  box-shadow: 6px 6px 16px 0 rgb(217 210 200),
+    -6px -6px 26px 0 rgba(255, 255, 255, 0.83);
+}
+
+#add-todo-button {
+  color: #2196f3;
+  margin: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  box-shadow: 6px 6px 16px 0 rgb(217 210 200),
+    -6px -6px 26px 0 rgba(255, 255, 255, 0.83);
+}
+
+#clear-form-button {
+  color: #2196f3;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  box-shadow: 6px 6px 16px 0 rgb(217 210 200),
+    -6px -6px 26px 0 rgba(255, 255, 255, 0.83);
+}
+
+.todo-list-container > h1 {
+  text-align: center;
+  color: #2196f3;
+}
+
+.empty-list {
+  color: red;
 }
 
 .item {
