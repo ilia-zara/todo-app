@@ -42,6 +42,11 @@ function navigateToTodo(doc, event) {
   router.navigate(`todo/${todoId}`);
 }
 
+function renderStatPage(doc) {
+  const router = configureRouter(doc, "/");
+  router.navigate("report");
+}
+
 function notifyAboutTodoChange(doc) {
   const todoItemChanged = new Event("todo-item-changed");
   doc.dispatchEvent(todoItemChanged);
@@ -98,6 +103,7 @@ let boundUpdateTodoList = null;
 let boundNavigateToTodo = null;
 let boundClearFormHandler = null;
 let boundUpdateTotalTodoCount = null;
+let boundNavigateToStatPage = null;
 
 export function getListEventHandlers(doc) {
   boundUpdateTodoList =
@@ -120,11 +126,26 @@ export function getListEventHandlers(doc) {
       ? boundUpdateTotalTodoCount
       : updateTotalTodoCount.bind(null, doc);
 
+  boundNavigateToStatPage =
+    boundNavigateToStatPage !== null
+      ? boundNavigateToStatPage
+      : renderStatPage.bind(null, doc);
+
   return [
     {
       elementId: "add-todo-button",
       eventName: "click",
       handler: addTodoHandler.bind(null, doc),
+    },
+    {
+      elementId: "link-stat",
+      eventName: "click",
+      handler: (event) => event.preventDefault(),
+    },
+    {
+      elementId: "link-stat",
+      eventName: "click",
+      handler: boundNavigateToStatPage,
     },
     {
       elementId: "clear-form-button",

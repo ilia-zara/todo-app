@@ -36,10 +36,7 @@ export default class Router {
   }
 
   clearSlashes(path) {
-    return path
-      .toString()
-      .replace(/\/$/g, "")
-      .replace(/^\//g, "");
+    return path.toString().replace(/\/$/g, "").replace(/^\//g, "");
   }
 
   add(re, handler) {
@@ -48,7 +45,7 @@ export default class Router {
   }
 
   remove(param) {
-    this.routes.forEach(router => {
+    this.routes.forEach((router) => {
       if (
         router.handler === param ||
         router.re.toString() === param.toString()
@@ -65,7 +62,7 @@ export default class Router {
 
     if (fragment == "") fragment = "/";
 
-    const matchedRoute = this.routes.find(route => {
+    const matchedRoute = this.routes.find((route) => {
       return Array.isArray(fragment.match(route.re));
     });
 
@@ -82,7 +79,7 @@ export default class Router {
   listen() {
     window.addEventListener(
       "navigate",
-      e => {
+      (e) => {
         this.check(this.getFragment());
       },
       false

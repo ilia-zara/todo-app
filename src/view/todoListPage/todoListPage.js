@@ -75,9 +75,10 @@ function renderTodoTotal(doc, totalCount) {
 
 function renderStatPage(doc) {
   const statDiv = createElement(doc, "div", "statistic-container");
-  const link = createElement(doc, "a", "statistic-link");
+  const link = createElement(doc, "a");
   link.setAttribute("href", "#");
-  link.innerHTML = "Show statistics."; // implement as link <a>
+  link.id = "link-stat";
+  link.innerHTML = "Show statistics.";
   statDiv.append(link);
 
   return statDiv;
