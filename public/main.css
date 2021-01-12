@@ -2,8 +2,11 @@
   box-sizing: border-box;
 }
 
+body {
+  background: #ece7e7;
+}
+
 #root {
-  height: 100vh;
   background: #efeeee;
   display: flex;
   justify-content: center;
