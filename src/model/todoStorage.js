@@ -4,9 +4,6 @@ const apiRoot = "http://localhost:3000";
 
 class TodoStorage {
   constructor() {
-    this.storage = {};
-
-    this.currentId = 0;
     this.todoCount = 0;
     this.postponeCount = 0;
     this.completeCount = 0;
@@ -23,10 +20,34 @@ class TodoStorage {
     return todo;
   }
 
-  createTodo(text) {
+  convertToViewDto(todoDto) {
+    return {
+      id: todoDto.id,
+      text: todoDto.text,
+      state: todoDto.state,
+      dateCreated: new Date(todoDto.dateCreated),
+      dateCompleted:
+        todoDto.dateCompleted !== null ? new Date(todoDto.dateCompleted) : null,
+    };
+  }
+
+  async createTodo(text) {
     const newTodo = new Todo(text);
-    this.storage[this.currentId] = newTodo;
-    this.currentId += 1;
+    const addResponse = await fetch(`${apiRoot}/todos/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newTodo),
+    });
+
+    if (!addResponse.ok) {
+      console.log(`Error with status ${addResponse.status}`);
+      return;
+    }
+
+    console.log(`Ok with status ${addResponse.status}`);
+
     this.todoCount += 1;
   }
 
@@ -44,38 +65,88 @@ class TodoStorage {
     return this.deleteCount;
   }
 
-  getTodoById(id) {
-    const todo = this.storage[id];
-    return {
-      id,
-      text: todo.text,
-      state: todo.state,
-      dateCreated: new Date(todo.dateCreated),
-      dateCompleted:
-        todo.dateCompleted !== null ? new Date(todo.dateCompleted) : null,
-    };
+  async getTodoById(id) {
+    return this.convertToViewDto(await this.getTodoDtoById(id));
   }
 
-  postponeById(id) {
-    const todo = this.storage[id];
+  async getTodoDtoById(id) {
+    const returnTodo = await fetch(`${apiRoot}/todos/${id}`);
+
+    if (!returnTodo.ok) {
+      console.log(`Error with status ${returnTodo.status}`);
+      return;
+    }
+
+    console.log(`Ok with status ${returnTodo.status}`);
+    return await returnTodo.json();
+  }
+
+  async patchTodo(todoId, patch) {
+    const patchResponse = await fetch(`${apiRoot}/todos/${todoId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(patch),
+    });
+
+    if (!patchResponse.ok) {
+      console.log(`Error with status ${patchResponse.status}`);
+      return;
+    }
+
+    console.log(`Ok with status ${patchResponse.status}`);
+
+    const patchedTodo = await patchResponse.json();
+
+    return patchedTodo.id;
+  }
+
+  async postponeById(id) {
+    const todo = this.convertToTodo(this.getTodoDtoById(id));
     todo.postpone();
+
+    const patch = { state: todo.state };
     this.postponeCount += 1;
+
+    return await this.patchTodo(id, patch);
   }
 
-  resumeById(id) {
-    const todo = this.storage[id];
+  async resumeById(id) {
+    const todo = this.convertToTodo(this.getTodoDtoById(id));
     todo.resume();
+
+    const patch = { state: todo.state };
     this.postponeCount -= 1;
+
+    return await this.patchTodo(id, patch);
   }
 
-  completeById(id) {
-    const todo = this.storage[id];
+  async completeById(id) {
+    const todo = this.convertToTodo(this.getTodoDtoById(id));
     todo.done();
+
+    const patch = { state: todo.state, dateCompleted: todo.dateCompleted };
     this.completeCount += 1;
+
+    return await this.patchTodo(id, patch);
   }
 
-  deleteById(id) {
-    delete this.storage[id];
+  async deleteById(id) {
+    const deleteResponse = await fetch(`${apiRoot}/todos/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!deleteResponse.ok) {
+      console.log(`Error with status ${deleteResponse.status}`);
+      return;
+    }
+
+    console.log(`Ok with status ${deleteResponse.status}`);
+
     this.todoCount -= 1;
     this.deleteCount += 1;
   }
@@ -91,7 +162,9 @@ class TodoStorage {
     console.log(`Ok with status ${returnAllTodo.status}`);
     const returnedDto = await returnAllTodo.json();
 
-    return returnedDto.map((dto) => this.convertToTodo(dto));
+    this.todoCount = returnedDto.lenght;
+
+    return returnedDto.map((dto) => this.convertToViewDto(dto));
   }
 }
 
